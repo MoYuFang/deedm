@@ -1,6 +1,10 @@
 'use-strict'
 
-const DEBUG = true;
+//Build syntax tree from text
+//Some test cases are in the bottom
+
+const DEBUG = false;
+
 function log(...msg){
     if (DEBUG){
         console.log(...msg);
@@ -144,6 +148,7 @@ export function build_syntax_tree_from_str(str) {
     return stk_tree[0];
 }
 
+//test for debugging
 if (DEBUG){
     var test_str = [
         "p\\vee(q\\wedge r)\\leftrightarrow(p\\vee q)\\wedge(-p\\rightarrow r)",
