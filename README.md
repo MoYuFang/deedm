@@ -74,5 +74,7 @@ index.html
 ### Collaboration
 
 （待协商确定）
-
+1. 软件的低级版本（该做什么、ch1 ch2 ch3 ch4 ch5 的完成顺序是、）
+2. 软件的高级版本（如何可视化）
+3. github 的使用规范
 
