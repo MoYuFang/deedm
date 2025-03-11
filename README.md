@@ -23,6 +23,7 @@ v22.14.0
 git clone https://github.com/MoYuFang/deedm/ my_deedm
 cd my_deedm
 my_deedm > npm install
+
 ```
 
 ### Run dev
@@ -72,11 +73,6 @@ index.html
 
 ### Collaboration
 
-协作开发时只需要在 `dev` 分支中开发各 case
-
-```
-
-```
-
+（待协商确定）
 
 
