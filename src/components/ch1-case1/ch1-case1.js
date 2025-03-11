@@ -2,6 +2,7 @@
 
 //Build syntax tree from text
 //Some test cases are in the bottom
+//Unfinished
 
 const DEBUG = false;
 
