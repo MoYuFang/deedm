@@ -73,6 +73,7 @@ ch1-case4.vue
 
 ### Collaboration
 
+协作开发时只需要在 `dev` 分支中开发各 case
 
 ```
 
