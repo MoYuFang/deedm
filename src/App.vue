@@ -8,25 +8,33 @@ class CH_DATA {
   constructor(id, title) {
     this.id = id;
     this.title = title;
-    this.case_data_list = [];
+    this.case_data_list = {};
+    this.case_data_list_index = []; // used for v-for
+  }
+  add_case(case_){
+    this.case_data_list[case_.id] = case_;
+    this.case_data_list_index.push(case_.id);
   }
   get_default_case_id(){
-    let tmp=this.case_data_list[0]
+    let tmp=this.case_data_list[this.id+'-case1']
     return tmp?tmp.id:undefined
   }
 }
-const ch_data_list = [
+const ch_data_list_index = []; //Used for v-for
+const ch_data_list = {};
+[
   ['ch1', '逻辑'],
   ['ch2', '集合与关系'],
   ['ch3', '组合计数'],
   ['ch4', '图与树'],
-  ['ch5', '代数与群'],
-].map(item => new CH_DATA(
-  item[0], item[1]
-))
+  ['ch5', '代数与群']
+].forEach(item =>{
+  ch_data_list[item[0]]=new CH_DATA(item[0], item[1]);
+  ch_data_list_index.push(item[0])
+});
 
-const current_ch_index = ref(0);
-const current_ch_id = ref(ch_data_list[current_ch_index.value].id);
+
+const current_ch_id = ref('ch1');
 
 class CASE_DATA {
   constructor(id, title) {
@@ -35,36 +43,35 @@ class CASE_DATA {
   }
 }
 
-ch_data_list[0].case_data_list = [
+[
   ['ch1-case1', '语法树'],
   ['ch1-case2', '真值表'],
   ['ch1-case3', '等值验算'],
   ['ch1-case4', '推理检验']
-].map(item => new CASE_DATA(
-  item[0], item[1]
-))
+].forEach(item =>
+  ch_data_list['ch1'].add_case(new CASE_DATA(item[0], item[1]))
+);
 
-const current_case_index = ref(0);
-const current_case_id = ref(ch_data_list[current_ch_index.value].get_default_case_id());
+const current_case_id = ref(ch_data_list[current_ch_id.value].get_default_case_id());
 
-function ch_btn_click(ch_id, index) {
+function ch_btn_click(ch_id) {
   if (ch_id === current_ch_id.value) return;
-  current_ch_index.value = index;
   current_ch_id.value = ch_id;
-  case_btn_click(ch_data_list[current_ch_index.value].get_default_case_id(), 0)
+  case_btn_click(ch_data_list[current_ch_id.value].get_default_case_id())
 }
 
-function case_btn_click(case_id, index) {
+function case_btn_click(case_id) {
   if (case_id === current_case_id.value) return;
-  current_case_index.value = index
   current_case_id.value = case_id
   console.log(`shift to ${current_case_id.value}`)
 }
 
 const is_ch_selected_check = reactive({});
-for (let x of ch_data_list){
+for (let ch_id of ch_data_list_index){
+  let x = ch_data_list[ch_id];
   is_ch_selected_check[x.id] = computed(()=>x.id===current_ch_id.value);
-  for(let y of x.case_data_list){
+  for(let case_id of x.case_data_list_index){
+    let y = x.case_data_list[case_id];
     is_ch_selected_check[y.id] = computed(()=>y.id===current_case_id.value)
   }
 }
@@ -91,28 +98,29 @@ onMounted(async () => {
     <header>
       <nav>
         <div id="icon-container"></div>
-        <button class='ch-btn' v-for='(ch_data, index) in ch_data_list'
-          :id='`${ch_data.id}-btn`' :key='ch_data.id'
+        <button class='ch-btn' v-for='(ch_data_id,index) in ch_data_list_index'
+          :id='`${ch_data_id}-btn`' :key='ch_data_id'
           :class="{
             'first-item': index === 0,
-            'last-item': index === ch_data_list.length - 1,
-            'selected': is_ch_selected_check[ch_data.id]}"
-          @click="ch_btn_click(ch_data.id, index)">
-          {{ ch_data.title }}
+            'last-item': index === ch_data_list_index.length - 1,
+            'selected': is_ch_selected_check[ch_data_id]}"
+          @click="ch_btn_click(ch_data_id)">
+          {{ ch_data_list[ch_data_id].title }}
         </button>
       </nav>
     </header>
     <main>
       <aside>
-        <button class="case-btn" v-for="(case_data, index) in ch_data_list[current_ch_index].case_data_list"
-          :id="`${case_data.id}-btn`" :key="`${case_data.id}`"
+        <button class="case-btn"
+          v-for="(case_data_id, index) in ch_data_list[current_ch_id].case_data_list_index"
+          :id="`${case_data_id}-btn`" :key="`${case_data_id}`"
           :class="{
             'first-item': index === 0,
-            'last-item': index === ch_data_list[current_ch_index].case_data_list.length - 1,
-            'selected': is_ch_selected_check[case_data.id]
+            'last-item': index === ch_data_list[current_ch_id].case_data_list_index.length - 1,
+            'selected': is_ch_selected_check[case_data_id]
           }"
-          @click="case_btn_click(case_data.id, index)">
-          {{ case_data.title }}
+          @click="case_btn_click(case_data_id)">
+          {{ ch_data_list[current_ch_id].case_data_list[case_data_id].title }}
           <div class="btn-top"></div>
         </button>
       </aside>
@@ -188,7 +196,7 @@ button:hover,button.selected {
 }
 
 main {
-  background-color: #523c3c;
+  background-color: #beaa15;
   display: flex;
   flex-flow: row;
   flex: 1;
@@ -231,7 +239,6 @@ article {
 }
 .component{
   margin: 0px;
-  background-color:rgb(93, 127, 57);
   flex:1;
 }
 </style>
