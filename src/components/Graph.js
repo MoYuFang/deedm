@@ -144,13 +144,13 @@ export class Graph {
                     check_bound(u.item.pos);
                     V2d.omul(u.upos, 0.9)
 
-                    // if (g.is_cent){
-                    //     let upos = {x:u.item.pos.x,y:u.item.pos.y},
-                    //         cupos = V2d.sub(ccpos, upos), cul = V2d.len(cupos);
-                    //     if (cul > 1){
-                    //         V2d.oadd(u.dpos, cupos, g.cent_v2/cul);
-                    //     }
-                    // }
+                    if (g.is_cent){
+                        let upos = {x:u.item.pos.x,y:u.item.pos.y},
+                            cupos = V2d.sub(ccpos, upos), cul = V2d.len(cupos);
+                        if (cul > 1){
+                            V2d.oadd(u.dpos, cupos, g.cent_v2/cul);
+                        }
+                    }
 
                     V2d.oadd(u.dpos, V2d.sub({x:g.svg_width/2,y:g.svg_height/2},ccpos),
                         g.cent_v1*dt);
