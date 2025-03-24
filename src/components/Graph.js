@@ -31,7 +31,7 @@ export class Graph {
 
         this.is_cent = true;
         this.cent_v1 = 400;
-        this.cent_v2 = 100;
+        this.cent_v2 = 1;
 
         this.is_animating = false;
         this.last_timestamp = -1;
@@ -56,7 +56,6 @@ export class Graph {
         this.vertex_status[name] = {
             item: this.vertex_map[name],
             dpos: { x: 0, y: 0 },
-            upos: { x: 0, y: 0 }
         }
         let v = this.vertex_map[name].pos;
 
@@ -144,10 +143,8 @@ export class Graph {
                     if (g.is_cent){
                         let upos = {x:u.item.pos.x,y:u.item.pos.y},
                             cupos = V2d.sub(ccpos, upos), cul = V2d.len(cupos),
-                            vel = g.cent_v2;
-                        if (cul > 1){
-                            V2d.oadd(u.dpos, cupos, g.cent_v2/cul);
-                        }
+                            vel = g.cent_v2*cul*cul/(g.vertex_radius.value*g.vertex_radius.value);
+                        V2d.oadd(u.dpos, cupos, vel/cul);
                     }
 
                     V2d.oadd(u.dpos, V2d.sub({x:g.svg_width/2,y:g.svg_height/2},ccpos),g.cent_v1*dt);
