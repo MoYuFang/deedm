@@ -36,6 +36,7 @@ export class Graph {
 
         this.is_animating = false;
         this.last_timestamp = -1;
+        this.fr_c = 0.9;
 
         this.edge_map = reactive({});
         this.edge_ideal_len = this.away_r*1.1;
@@ -110,26 +111,19 @@ export class Graph {
         (function update_frame (timestamp) {
             if (!g.is_animating) return;
             if (g.last_timestamp>0){
-                let dt = (timestamp-g.last_timestamp)/1000;
-                let count = 0;
+                let dt = (timestamp-g.last_timestamp)/1000,
+                    count = Object.keys(g.vertex_map).length,
+                    fr_k = g.fr_c*Math.sqrt(g.svg_width*g.svg_height/count);
                 let ccpos = {x:0.0, y:0.0};
                 for (let u of Object.values(g.vertex_status)){
                     V2d.oclr(u.dpos)
-                    let cpos = V2d.sub(
-                        {x:u.item.pos.x,y:u.item.pos.y},
-                        {x:0,y:0},
-                    );
-                    V2d.oadd(ccpos, cpos);
-                    count += 1;
+                    V2d.oadd(ccpos, u.item.pos);
 
                     for (let v of Object.values(g.vertex_status)){
                         if (u === v) continue;
                         let wpos = V2d.sub(u.item.pos, v.item.pos),
-                            l = V2d.len(wpos);
-                        
-                        if (l >= g.away_r) continue;
-                        let vel = Math.min(g.away_v*(g.away_r-l)/g.away_a, g.away_v);
-                        V2d.oadd(u.dpos, wpos, vel/l);
+                            l = Math.max(V2d.len(wpos), 1);
+                        V2d.oadd(u.dpos, wpos, fr_k*fr_k/(l*l));
                     }
                 }
 
@@ -138,11 +132,9 @@ export class Graph {
                         wpos = V2d.sub(u.pos,v.pos),
                         l = V2d.len(wpos),
                         us = g.vertex_status[u.name], vs = g.vertex_status[v.name],
-                        vel = g.edge_v/g.edge_a*(l-g.edge_ideal_len);
-                    vel = Math.max(-g.edge_v,Math.min(g.edge_v, vel));
-                    
-                    V2d.oadd(us.dpos, wpos, -vel/l)
-                    
+                        vel = l/fr_k;
+                    V2d.oadd(us.dpos, wpos, -vel);
+                    V2d.oadd(vs.dpos, wpos, vel);
                 }
 
                 V2d.omul(ccpos, 1/count);
@@ -152,13 +144,13 @@ export class Graph {
                     check_bound(u.item.pos);
                     V2d.omul(u.upos, 0.9)
 
-                    if (g.is_cent){
-                        let upos = {x:u.item.pos.x,y:u.item.pos.y},
-                            cupos = V2d.sub(ccpos, upos), cul = V2d.len(cupos);
-                        if (cul > 1){
-                            V2d.oadd(u.dpos, cupos, g.cent_v2/cul);
-                        }
-                    }
+                    // if (g.is_cent){
+                    //     let upos = {x:u.item.pos.x,y:u.item.pos.y},
+                    //         cupos = V2d.sub(ccpos, upos), cul = V2d.len(cupos);
+                    //     if (cul > 1){
+                    //         V2d.oadd(u.dpos, cupos, g.cent_v2/cul);
+                    //     }
+                    // }
 
                     V2d.oadd(u.dpos, V2d.sub({x:g.svg_width/2,y:g.svg_height/2},ccpos),
                         g.cent_v1*dt);
@@ -203,7 +195,7 @@ export class Graph {
                 window.removeEventListener('mousemove', gml.on_mouse_move);
                 window.removeEventListener('mouseup', gml.on_mouse_up);
                 gml.current_item.is_selected = false;
-                graph.start_cent()
+                g.start_cent()
             }
         }
         gml = g.mouse_interaction;
