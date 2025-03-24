@@ -26,21 +26,20 @@ export class Graph {
         this.vertex_radius = ref(17);
         this.vertex_padding = 10;
 
-        this.away_r = 105
-        this.away_v = 16000
-        this.away_a = 800
+        this.away_r = 120;
+        this.away_v = 40;
 
         this.is_cent = true;
         this.cent_v1 = 400;
-        this.cent_v2 = 400;
+        this.cent_v2 = 80;
 
         this.is_animating = false;
         this.last_timestamp = -1;
         this.fr_c = 0.9;
 
         this.edge_map = reactive({});
-        this.edge_ideal_len = this.away_r*1.1;
-        this.edge_v = 8000;
+        this.edge_ideal_len = this.away_r;
+        this.edge_v = 1;
         this.edge_a = 400;
 
         this.init_mouse_interaction();
@@ -113,7 +112,7 @@ export class Graph {
             if (g.last_timestamp>0){
                 let dt = (timestamp-g.last_timestamp)/1000,
                     count = Object.keys(g.vertex_map).length,
-                    fr_k = g.fr_c*Math.sqrt(g.svg_width*g.svg_height/count);
+                    fr_k = 2*Math.sqrt(g.svg_width*g.svg_height/count);
                 let ccpos = {x:0.0, y:0.0};
                 for (let u of Object.values(g.vertex_status)){
                     V2d.oclr(u.dpos)
@@ -122,8 +121,10 @@ export class Graph {
                     for (let v of Object.values(g.vertex_status)){
                         if (u === v) continue;
                         let wpos = V2d.sub(u.item.pos, v.item.pos),
-                            l = Math.max(V2d.len(wpos), 1);
-                        V2d.oadd(u.dpos, wpos, fr_k*fr_k/(l*l));
+                            l = Math.max(V2d.len(wpos), 1),
+                            vel = fr_k*fr_k*(1/(l)-1/(g.away_r));
+                        if (vel <= 0) continue;
+                        V2d.oadd(u.dpos, wpos, vel/l);
                     }
                 }
 
@@ -132,9 +133,11 @@ export class Graph {
                         wpos = V2d.sub(u.pos,v.pos),
                         l = V2d.len(wpos),
                         us = g.vertex_status[u.name], vs = g.vertex_status[v.name],
-                        vel = l/fr_k;
-                    V2d.oadd(us.dpos, wpos, -vel);
-                    V2d.oadd(vs.dpos, wpos, vel);
+                        vel = (l-g.edge_ideal_len);
+                    // if (l < g.edge_ideal_len) continue;
+                    vel = 30*Math.abs(vel)*vel/fr_k;
+                    V2d.oadd(us.dpos, wpos, -vel/l);
+                    V2d.oadd(vs.dpos, wpos, vel/l);
                 }
 
                 V2d.omul(ccpos, 1/count);
