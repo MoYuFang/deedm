@@ -39,7 +39,7 @@ export class Graph {
 
         this.edge_map = reactive({});
         this.edge_ideal_len = this.away_r;
-        this.edge_v = 200;
+        this.edge_v = 10;
 
         this.init_mouse_interaction();
         this.init_fresh();
@@ -130,8 +130,8 @@ export class Graph {
                         wpos = V2d.sub(u.pos,v.pos),
                         l = V2d.len(wpos),
                         us = g.vertex_status[u.name], vs = g.vertex_status[v.name],
-                        vel = 0.1*(l-g.edge_ideal_len);
-                    vel = Math.abs(vel)*vel;
+                        vel = g.edge_v*(l-g.edge_ideal_len);
+                    vel = vel;
                     V2d.oadd(us.dpos, wpos, -vel/l);
                     V2d.oadd(vs.dpos, wpos, vel/l);
                 }
