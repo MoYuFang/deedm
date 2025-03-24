@@ -127,8 +127,10 @@ onMounted(async () => {
 
     // case_map[key] = 
   }
-  console.log(`case_map`, case_map);
+  // console.log(`case_map`, case_map);
 })
+
+ch_btn_click('ch4'); case_btn_click('ch4-case1');
 
 </script>
 

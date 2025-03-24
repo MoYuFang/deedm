@@ -10,7 +10,7 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale; */
-  /* font-size:20px; */
+  font-size:20px;
 }
 
 #app {
@@ -30,15 +30,47 @@ body {
   padding: 0px;
   width: 100vw;
   height: 100vh;
-  /*
-  display: flex;
-  flex-direction:topvue;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh; */
 }
 
+textarea{
+  background-color: var(--bg-color);
+  color: aquamarine;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  font-size:14px;
+  outline: 0px;
+}
+textarea:hover{
+  border-color: aquamarine;
+}
+textarea:focus{
+  border-color: aquamarine;
+}
+textarea::placeholder {
+color: rgb(74, 156, 128);
+opacity: 1;
+}
+textarea::-webkit-scrollbar {
+  width: 8px;
+}
 
+textarea::-webkit-scrollbar-track {
+  background: var(--bg-color);
+  border-radius: 4px
+}
+
+textarea::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+textarea::-webkit-scrollbar-button {
+  background: var(--bg-color);
+}
+
+textarea::-webkit-scrollbar-thumb:hover {
+  background: #888;
+}
 
 /*
 a {
@@ -49,8 +81,6 @@ a {
 a:hover {
   color: #535bf2;
 }
-
-
 
 h1 {
   font-size: 3.2em;
