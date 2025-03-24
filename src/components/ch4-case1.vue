@@ -29,9 +29,6 @@ var default_fresh_input=`0
 2 4
 4 5
 1 2
-a b
-c d
-e f
 `;
 onMounted(() => {
     let svg = document.getElementById('show-graph');
