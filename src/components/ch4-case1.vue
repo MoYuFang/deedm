@@ -1,6 +1,6 @@
 <script setup>
 import { computed, ref, watchEffect, onMounted, reactive, useSSRContext } from 'vue';
-import temp from './temp.vue'
+// import temp from './temp.vue'
 import {Graph} from './Graph.js'
 function log(s) {
     let ld = document.getElementById('logging-div');
