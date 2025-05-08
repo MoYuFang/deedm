@@ -1,6 +1,5 @@
 <script setup>
 import { computed, ref, watchEffect, onMounted, reactive, useSSRContext } from 'vue';
-// import temp from './temp.vue'
 import {Graph} from './Graph.js'
 function log(s) {
     let ld = document.getElementById('logging-div');
@@ -89,7 +88,6 @@ onMounted(() => {
             </svg>
         </div>
     </div>
-
 </template>
 
 <style scoped>
@@ -153,6 +151,5 @@ textarea{
     width: 200px;
     flex:2;
 }
-
 
 </style>
