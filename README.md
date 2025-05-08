@@ -47,14 +47,9 @@ my_deedm > npm run dev
 主要结构如下
 ```
 src/
-    components/
-        ch1-case1/
-            ch1-case1.js
-
-        ch0-case0.vue
-        ch1-case1.vue
-        ch1-case2.vue
-        ...
+    dynagraph/
+      Dynagraph.vue
+      ...
     App.vue
     main.js
     style.css
@@ -63,18 +58,5 @@ index.html
 
 界面运作的流程大致如下：
 
-`index.html` 调用 `src/main.js`，`main.js` 加载主界面 `App.vue`，主界面 `App.vue` 中有对各 case 的索引，点击对应按钮可以加载对应 case 的子界面。
-
-`App.vue` 加载各 case 的子界面方式是在 `src/components/` 下检索格式为 `ch?-case?.vue`的文件，如 `ch1-case1.vue`，在 `App.vue` 中可以看到目前被检索的 case 子界面
-
-当被检索界面缺失时，主界面加载 `ch0-case0.vue` 作为默认显示
-
-当开发某个 `case` 时，可能需要编写额外的子模块，为方便管理，应当在 `src/components/` 下建立相关文件夹来存放，例如 `ch1-case1.vue` 中会调用 `ch1-case1.js`，于是创建了 `src/components/ch1-case1/` 文件夹
-
-### Collaboration
-
-（待协商确定）
-1. 软件的低级版本（该做什么、ch1 ch2 ch3 ch4 ch5 的完成顺序是、）
-2. 软件的高级版本（如何可视化）
-3. github 的使用规范
+`index.html` 调用 `src/main.js`，`main.js` 加载主界面 `App.vue`，主界面 `App.vue` 加载组件 <Dynagraph/>
 
