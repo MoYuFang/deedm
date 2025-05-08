@@ -58,5 +58,5 @@ index.html
 
 界面运作的流程大致如下：
 
-`index.html` 调用 `src/main.js`，`main.js` 加载主界面 `App.vue`，主界面 `App.vue` 加载组件 <Dynagraph/>
+`index.html` 调用 `src/main.js`，`main.js` 加载主界面 `App.vue`，主界面 `App.vue` 加载组件 `<Dynagraph/>`
 
