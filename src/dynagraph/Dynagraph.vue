@@ -1,6 +1,8 @@
 <script setup>
+import './basic_style.css'
 import { onMounted, reactive, computed, ref, shallowReactive } from 'vue'
 
+//Vue components
 import { GraphConfigure } from './GraphConfigure.js'
 import { Graph } from './Graph.js';
 import { DfsAnimator, BfsAnimator } from './Animator.js';
@@ -11,10 +13,6 @@ import { PlayCircle } from "@vicons/ionicons5" //
 
 //Naive UI: npm install naive-ui
 import { NIcon } from 'naive-ui'
-
-
-//Vue components
-
 
 var graph = shallowReactive(new Graph(400, 400));
 var graph_configure = reactive(new GraphConfigure());
@@ -138,59 +136,10 @@ onMounted(() => {
 }
 
 #operate button {
-  width: fit-content;
-  height: fit-content;
-  padding: 5px;
-
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
 }
 
-textarea {
-  background-color: #333;
-  width: 200px;
-  height: 100%;
-  padding: 5px;
-  outline: 0px;
-
-  border: 2px solid aquamarine;
-  border-radius: 10px;
-}
-
-textarea:hover {
-  border-color: aquamarine;
-}
-
-textarea:focus {
-  border-color: aquamarine;
-}
-
-textarea::placeholder {
-  color: rgb(74, 156, 128);
-  opacity: 1;
-}
-
-textarea::-webkit-scrollbar {
-  width: 8px;
-}
-
-textarea::-webkit-scrollbar-track {
-  background: var(--bg-color);
-  border-radius: 4px
-}
-
-textarea::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 4px;
-}
-
-textarea::-webkit-scrollbar-button {
-  background: var(--bg-color);
-}
-
-textarea::-webkit-scrollbar-thumb:hover {
-  background: #888;
-}
 </style>
