@@ -1,9 +1,11 @@
 <script setup>
 import Dynagraph from './dynagraph/Dynagraph.vue';
+import PureGraph from './dynagraph/PureGraph.vue';
 </script>
 
 <template>
-  <Dynagraph/>
+  <!-- <Dynagraph/> -->
+  <PureGraph/>
 </template>
 
 <style scoped>

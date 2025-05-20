@@ -30,18 +30,32 @@ export class Graph {
     this.node_map = shallowReactive({});
     this.edge_map = shallowReactive({});
 
+    this.adj_table = {};
+
     this.init_fresh();
     this.init_mouse_interaction();
   }
+  //如果点已存在则失败
   add_node(name, pos = null) {
     if (!name || this.node_map[name]) return false;
     if (!pos) pos = [Math.random() * this.width, Math.random() * this.height];
     this.node_map[name] = reactive(new Node(pos[0], pos[1], name));
+    
+    //样例元素
+    //this.adj_table[name][adj_node_name] = {o:Edge, to:string, direction:number}
+    this.adj_table[name] = {};
     return true;
   }
   del_node(name) {
+    let tmp = [];
+    for(let x of Object.values(this.adj_table[name])) tmp.push(x.o.name);
+    console.log(tmp);
+    for(let ename of tmp) this.del_edge(ename);
     delete this.node_map[name];
+    delete this.adj_table[name];
   }
+  //两种添加方式 add_edge('1', '2') 与 add_edge('1 2', null)
+  //如果有点不存在则失败
   add_edge(name1, name2=null, label = '') {
     let ename;
     if (!name2) ename = name1, [name1, name2] = name1.split(' ');
@@ -60,6 +74,16 @@ export class Graph {
       return false;
     }
     this.edge_map[ename] = reactive(new Edge(u, v, ename, label));
+    this.adj_table[name1][name2] = {
+      o:this.edge_map[ename],
+      to:name2,
+      direction:0
+    }
+    this.adj_table[name2][name1] = {
+      o:this.edge_map[ename],
+      to:name1,
+      direction:1
+    }
     return true;
   }
   del_edge(name1, name2=null) {
@@ -71,7 +95,15 @@ export class Graph {
     }
     if (!this.edge_map[ename]) return false;
     delete this.edge_map[ename];
+    delete this.adj_table[name1][name2];
+    delete this.adj_table[name2][name1];
     return true;
+  }
+  keep_in_boundary(node){
+    if (node.x < 0) node.x = 0;
+    if (node.x > this.width) node.x = this.width;
+    if (node.y < 0) node.y = 0;
+    if (node.y > this.height) node.y = this.height;
   }
   init_fresh(e) {
     let g = this, timer = null;
@@ -89,8 +121,8 @@ export class Graph {
             emp[ename] = String(items[2]);
           }
         }
-        for (let k of Object.keys(g.node_map)) if (!(k in vmp)) g.del_node(k);
         for (let k of Object.keys(g.edge_map)) if (!(k in emp)) g.del_edge(k);
+        for (let k of Object.keys(g.node_map)) if (!(k in vmp)) g.del_node(k);
         for (let k of Object.keys(vmp)) g.add_node(k);
         for (let [k, v] of Object.entries(emp)) g.add_edge(k, null, v)
       },
