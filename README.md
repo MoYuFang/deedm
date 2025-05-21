@@ -48,8 +48,9 @@ my_deedm > npm run dev
 ```
 src/
     dynagraph/
+      examples/
+        sample.vue
       BFS+DFS.vue
-      PureGraph.vue
       ...
     App.vue
     main.js
