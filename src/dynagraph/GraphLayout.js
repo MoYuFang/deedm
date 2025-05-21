@@ -8,8 +8,8 @@ export class ForceLayout{
     this.k2 = 5;
     this.k3 = 0.1;
 
-    this.l1 = 10;
-    this.l2 = 70;
+    this.ideal_edge_length = 10;
+    this.exclusive_radius = 70;
 
     this.frequency = 30;
     this.time_interval = 1000/this.frequency;
@@ -46,13 +46,13 @@ export class ForceLayout{
             len_r = Math.max(v2d.len(vec_r), eps),
             k;
           if (this.graph.edge_map[ename]){
-            k = this.k1*(1.0-this.l1/len_r);
+            k = this.k1*(1.0-this.ideal_edge_length/len_r);
             v2d.oadd(nmp[u], vec_r, -k, 0);
             v2d.oadd(nmp[v], vec_r, k, 0);
           }
 
-          if (len_r > this.l2) k = 0.0;
-          else k = this.k2*(1.0-this.l2/len_r);
+          if (len_r > this.exclusive_radius) k = 0.0;
+          else k = this.k2*(1.0-this.exclusive_radius/len_r);
           v2d.oadd(nmp[u], vec_r, -k, 0);
           v2d.oadd(nmp[v], vec_r, k, 0);
         }
