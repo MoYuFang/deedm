@@ -37,13 +37,10 @@ export class Graph {
 
     shallowReactive(this);
   }
-  add_node(name, pos = null) {
+  add_node(name, pos = undefined) {
     if (!name || this.node_map[name]) return false;
     if (!pos) pos = [Math.random() * this.config.width, Math.random() * this.config.height];
     this.node_map[name] = shallowReactive(new Node(pos[0], pos[1], name));
-    
-    //样例元素
-    //this.adj_table[name][adj_node_name] = {o:Edge, to:string, direction:number}
     this.adj_table[name] = {};
     return true;
   }
@@ -55,9 +52,9 @@ export class Graph {
     delete this.node_map[name];
     delete this.adj_table[name];
   }
-  //两种添加方式 add_edge('1', '2') 与 add_edge('1 2', null)
+  //两种添加方式 add_edge('1', '2') 与 add_edge('1 2', undefined)
   //如果有点不存在则失败
-  add_edge(name1, name2=null, label = '') {
+  add_edge(name1, name2=undefined, label = '') {
     let ename;
     if (!name2) ename = name1, [name1, name2] = name1.split(' ');
     else {
@@ -87,7 +84,7 @@ export class Graph {
     }
     return true;
   }
-  del_edge(name1, name2=null) {
+  del_edge(name1, name2=undefined) {
     let ename;
     if (!name2) ename = name1, [name1, name2] = name1.split(' ');
     else {
@@ -113,32 +110,32 @@ export class Graph {
     if (node.y < bias) node.y = bias;
     if (node.y > this.config.height-bias) node.y = this.config.height-bias;
   }
+  str_to_graph(str){
+    let vmp = {}, emp = {};
+    for (let line of str.split('\n')) {
+      let items = line.split(/[\s]+/)
+      if (items[0]) vmp[items[0]] = items[0];
+      if (items[1]) {
+        vmp[items[1]] = items[1];
+        if (items[0] > items[1]) [items[0], items[1]] = [items[1], items[0]];
+        if (!items[2]) items[2] = '';
+        let ename = items[0] + ' ' + items[1];
+        emp[ename] = String(items[2]);
+      }
+    }
+    for (let k of Object.keys(this.edge_map)) if (!(k in emp)) this.del_edge(k);
+    for (let k of Object.keys(this.node_map)) if (!(k in vmp)) this.del_node(k);
+    for (let k of Object.keys(vmp)) this.add_node(k);
+    for (let [k, v] of Object.entries(emp)) this.add_edge(k, null, v)
+  }
   init_sync(e) {
     let g = this, timer = null;
     this.sync = {
-      str_to_graph: function (str) {
-        let vmp = {}, emp = {};
-        for (let line of str.split('\n')) {
-          let items = line.split(/[\s]+/)
-          if (items[0]) vmp[items[0]] = items[0];
-          if (items[1]) {
-            vmp[items[1]] = items[1];
-            if (items[0] > items[1]) [items[0], items[1]] = [items[1], items[0]];
-            if (!items[2]) items[2] = '';
-            let ename = items[0] + ' ' + items[1];
-            emp[ename] = String(items[2]);
-          }
-        }
-        for (let k of Object.keys(g.edge_map)) if (!(k in emp)) g.del_edge(k);
-        for (let k of Object.keys(g.node_map)) if (!(k in vmp)) g.del_node(k);
-        for (let k of Object.keys(vmp)) g.add_node(k);
-        for (let [k, v] of Object.entries(emp)) g.add_edge(k, null, v)
-      },
       on_input: function (e) {
         if (timer) clearTimeout(timer);
         timer = setTimeout(() => {
           timer = null;
-          g.sync.str_to_graph(e.target.value);
+          g.str_to_graph(e.target.value);
         }, 1000);
       }
     };

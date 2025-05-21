@@ -48,7 +48,8 @@ my_deedm > npm run dev
 ```
 src/
     dynagraph/
-      Dynagraph.vue
+      BFS+DFS.vue
+      PureGraph.vue
       ...
     App.vue
     main.js
@@ -58,5 +59,7 @@ index.html
 
 界面运作的流程大致如下：
 
-`index.html` 调用 `src/main.js`，`main.js` 加载主界面 `App.vue`，主界面 `App.vue` 加载组件 `<Dynagraph/>`
+`index.html` 调用 `src/main.js`，`main.js` 加载主界面 `App.vue`，主界面 `App.vue` 加载组件 `<DFS_BFS/>`
+
+`src/dynagraph/examples/sample.vue` 是使用范例，里面有一些 api 的详细注释
 
