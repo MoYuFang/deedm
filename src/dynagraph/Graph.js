@@ -1,4 +1,5 @@
 import { reactive, shallowReactive } from "vue";
+import { GraphConfigure } from './GraphConfigure.js'
 
 export class Node {
   constructor(x, y, name='') {
@@ -24,32 +25,32 @@ export class Edge {
 
 export class Graph {
   constructor(width, height) {
-    this.width = width;
-    this.height = height;
+    this.config = shallowReactive(new GraphConfigure(width, height));
 
     this.node_map = shallowReactive({});
     this.edge_map = shallowReactive({});
 
     this.adj_table = {};
 
-    this.init_fresh();
+    this.init_sync();
     this.init_mouse_interaction();
+
+    shallowReactive(this);
   }
-  //如果点已存在则失败
   add_node(name, pos = null) {
     if (!name || this.node_map[name]) return false;
-    if (!pos) pos = [Math.random() * this.width, Math.random() * this.height];
-    this.node_map[name] = reactive(new Node(pos[0], pos[1], name));
+    if (!pos) pos = [Math.random() * this.config.width, Math.random() * this.config.height];
+    this.node_map[name] = shallowReactive(new Node(pos[0], pos[1], name));
     
     //样例元素
     //this.adj_table[name][adj_node_name] = {o:Edge, to:string, direction:number}
     this.adj_table[name] = {};
     return true;
   }
+  //删除节点时首先会删除与它相连的所有边
   del_node(name) {
     let tmp = [];
     for(let x of Object.values(this.adj_table[name])) tmp.push(x.o.name);
-    console.log(tmp);
     for(let ename of tmp) this.del_edge(ename);
     delete this.node_map[name];
     delete this.adj_table[name];
@@ -73,7 +74,7 @@ export class Graph {
       console.assert(u && v, `It failed to add edge ${ename} because not all the nodes exist.`)
       return false;
     }
-    this.edge_map[ename] = reactive(new Edge(u, v, ename, label));
+    this.edge_map[ename] = shallowReactive(new Edge(u, v, ename, label));
     this.adj_table[name1][name2] = {
       o:this.edge_map[ename],
       to:name2,
@@ -99,16 +100,23 @@ export class Graph {
     delete this.adj_table[name2][name1];
     return true;
   }
-  keep_in_boundary(node){
-    if (node.x < 0) node.x = 0;
-    if (node.x > this.width) node.x = this.width;
-    if (node.y < 0) node.y = 0;
-    if (node.y > this.height) node.y = this.height;
+  arrow(ename, pos, neg=false){
+    if(!this.edge_map[ename]) return false;
+    this.edge_map[ename].positive_arrow = Boolean(pos);
+    this.edge_map[ename].negative_arrow = Boolean(neg);
+    return true;
   }
-  init_fresh(e) {
+  keep_in_boundary(node){
+    let bias = this.config.node_radius+5
+    if (node.x < bias) node.x = bias;
+    if (node.x > this.config.width-bias) node.x = this.config.width-bias;
+    if (node.y < bias) node.y = bias;
+    if (node.y > this.config.height-bias) node.y = this.config.height-bias;
+  }
+  init_sync(e) {
     let g = this, timer = null;
-    this.fresh = {
-      handle: function (str) {
+    this.sync = {
+      str_to_graph: function (str) {
         let vmp = {}, emp = {};
         for (let line of str.split('\n')) {
           let items = line.split(/[\s]+/)
@@ -130,7 +138,7 @@ export class Graph {
         if (timer) clearTimeout(timer);
         timer = setTimeout(() => {
           timer = null;
-          g.fresh.handle(e.target.value);
+          g.sync.str_to_graph(e.target.value);
         }, 1000);
       }
     };

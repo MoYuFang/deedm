@@ -1,10 +1,10 @@
 <script setup>
-import Dynagraph from './dynagraph/Dynagraph.vue';
+import DFS_BFS from './dynagraph/DFS+BFS.vue';
 import PureGraph from './dynagraph/PureGraph.vue';
 </script>
 
 <template>
-  <!-- <Dynagraph/> -->
+  <!-- <DFS_BFS/> -->
   <PureGraph/>
 </template>
 

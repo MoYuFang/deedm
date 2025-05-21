@@ -1,5 +1,5 @@
 <script setup>
-defineProps(['graph', 'graph_configure'])
+defineProps(['graph'])
 
 import node from './Node.vue'
 import edge from "./Edge.vue"
@@ -8,18 +8,18 @@ import {Node, Edge} from "./Graph.js"
 </script>
 
 <template>
-  <svg :width="graph.width" :height="graph.height">
+  <svg :width="graph.config.width" :height="graph.config.height">
     <edge 
       v-for="(edge,name) in graph.edge_map"
       :key="name"
       :edge="edge"
-      :graph_configure="graph_configure"
+      :graph_configure="graph.config"
     />
     <node 
       v-for="(node,name) in graph.node_map"
       :key="name"
       :node="node"
-      :graph_configure="graph_configure"
+      :graph_configure="graph.config"
       @mousedown="(e)=>graph.mouse_interaction.on_mouse_down(e,node)"
     />
   </svg>
@@ -32,8 +32,6 @@ import {Node, Edge} from "./Graph.js"
 
 svg {
   background-color: var(--svg-bg-color);
-  /* width: 400px;
-  height: 400px; */
   border: 2px solid aquamarine;
   border-radius: 10px;
   margin: 0px;

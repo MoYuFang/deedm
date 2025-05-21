@@ -12,7 +12,6 @@ defineProps(['node', 'graph_configure'])
     <circle
       :cx="node.x" :cy="node.y" :r="graph_configure.node_radius"
       :class="node.style_class"
-      :style="`transition-duration: ${graph_configure.style_transition_time};`"
     ></circle>
     <text 
         :x="node.x" :y="node.y" dy=".35em" text-anchor="middle"

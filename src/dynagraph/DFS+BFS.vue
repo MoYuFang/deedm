@@ -3,7 +3,6 @@ import './basic_style.css'
 import { onMounted, reactive, computed, ref, shallowReactive } from 'vue'
 
 //Vue components
-import { GraphConfigure } from './GraphConfigure.js'
 import { Graph } from './Graph.js';
 import { DfsAnimator, BfsAnimator } from './Animator.js';
 import graph_canvas from './GraphCanvas.vue'
@@ -14,8 +13,8 @@ import { PlayCircle } from "@vicons/ionicons5" //
 //Naive UI: npm install naive-ui
 import { NIcon } from 'naive-ui'
 
-var graph = shallowReactive(new Graph(400, 400));
-var graph_configure = reactive(new GraphConfigure());
+var graph = new Graph(400, 400);
+
 var dfs_animator = null, bfs_animator = null;
 var default_fresh_input = `1 2
 2 3
@@ -32,15 +31,15 @@ var default_fresh_input = `1 2
 function rect_dots() {
   default_fresh_input = '';
   let
-    radius = graph_configure.node_radius,
+    radius = graph.config.node_radius,
     rows = 5, cols = 5, x, y,
     padding = 3 * radius,
     tot_width = 2 * radius + (rows - 1) * (2 * radius + padding),
     tot_height = 2 * radius + (cols - 1) * (2 * radius + padding),
-    bx = (graph.width - tot_width) / 2 + radius, dx = 2 * radius + padding,
-    by = (graph.height - tot_height) / 2 + radius, dy = 2 * radius + padding,
+    bx = (graph.config.width - tot_width) / 2 + radius, dx = 2 * radius + padding,
+    by = (graph.config.height - tot_height) / 2 + radius, dy = 2 * radius + padding,
     count;
-  // console.log(`w&h:${graph.width}&${graph.height} dx:${dx} dy:${dy}`);
+  // console.log(`w&h:${graph.config.width}&${graph.config.height} dx:${dx} dy:${dy}`);
   for (let r = 0; r < rows; ++r) {
     y = by + r * dx;
     for (let c = 0; c < cols; ++c) {
@@ -79,7 +78,7 @@ onMounted(() => {
 <template>
   <div id="container">
     <div style="height:fit-content; display: flex; flex-direction: row; justify-content: center; align-items: stretch;">
-      <div style="margin-right: 20px; ; display: flex; flex-direction: column; justify-content: space-between; align-items: center; gap:20px" :height="graph.height">
+      <div style="margin-right: 20px; ; display: flex; flex-direction: column; justify-content: space-between; align-items: center; gap:20px" :height="graph.config.height">
         <div id="operate">
           <div style="height:100%; display: flex; flex-direction: row; justify-content: center; align-items: center;">
             <label style="margin-right:5px">Origin:</label>
@@ -93,7 +92,7 @@ onMounted(() => {
         <textarea 
           @input="(e)=>{ graph.fresh.on_input(e);}" spellcheck="false" >{{ default_fresh_input }}</textarea>
       </div>
-      <graph_canvas :graph="graph" :graph_configure="graph_configure" />
+      <graph_canvas :graph="graph" />
     </div>
     <div>
 
