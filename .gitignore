@@ -22,3 +22,12 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+#temporary file
+test.js
+test.py
+src/test.js
+src/test.py
+src/components/temp.vue
+old
+old/*

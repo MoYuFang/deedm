@@ -1,0 +1,66 @@
+input{
+  background-color: #333;
+  border: 1px solid aquamarine;
+  border-radius: 3px;
+}
+
+input:hover {
+  background-color: #444;
+}
+
+input:focus {
+  outline: 1px solid aquamarine;
+  background-color: #444;
+}
+
+button{
+  width: fit-content;
+  height: fit-content;
+
+  padding: 8px 10px;
+  background-color: #333;
+  border: 1px solid aquamarine;
+  border-radius: 5px;
+}
+
+button:hover{
+  background-color: #444;
+}
+
+button:active {
+  transform: scale(0.98);
+}
+
+textarea {
+  --bg-color: 333;
+  background-color: #333;
+  width: 200px;
+  height: 100%;
+  padding: 5px;
+  outline: 0px;
+
+  border: 2px solid aquamarine;
+  border-radius: 10px;
+}
+
+textarea::placeholder {
+  color: rgb(74, 156, 128);
+  opacity: 1;
+}
+
+textarea::-webkit-scrollbar {
+  width: 8px;
+}
+textarea::-webkit-scrollbar-track {
+  background: var(--bg-color);
+  border-radius: 4px
+}
+
+textarea::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+textarea::-webkit-scrollbar-thumb:hover {
+  background: #999;
+}
